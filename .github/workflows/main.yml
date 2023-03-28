@@ -10,12 +10,12 @@ on:
   
 jobs:
   pytest:
-    runs-on: ubuntu-latest
-
+    runs-on: ${{ matrix.os }}
     strategy:
-      fail-fast: false
+      fail-fast: true
       matrix:
-        python-version: ["3.9"]
+        os: ["ubuntu-latest", "windows-latest", "macos-latest"]
+        python-version: ["3.7", "3.8", "3.9", "3.10"]
 
     steps:
     - uses: actions/checkout@v3
@@ -34,9 +34,9 @@ jobs:
       run: |
         coverage run -m pytest
         pwd
-        coverage xml -i -o test-results-${{ matrix.python-version }}.xml
+        coverage xml -i -o test-results-${{ matrix.os }}-${{ matrix.python-version }}.xml
 
     - name: Upload Coverage to Codecov
       uses: codecov/codecov-action@v3
       with:
-        files: test-results-${{ matrix.python-version }}.xml
+        files: test-results-${{ matrix.os }}-${{ matrix.python-version }}.xml
