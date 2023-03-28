@@ -58,7 +58,7 @@ class SAEONObsAPI:
         # Extract relevant columns and clean up the DataFrame
         df = df[['id', 'siteName', 'stationName', 'phenomenonName', 'phenomenonCode', 'offeringName', 'offeringCode', 'unitName', 'unitCode', 'latitudeNorth', 'longitudeEast', 'startDate', 'endDate', 'valueCount']]
         df['obs_type_code'] = df['phenomenonCode'] + '_' + df['offeringCode'] + '_' + df['unitCode']
-        df['description'] = df['phenomenonName'] + ' - ' + df['offeringName'] + ' - ' + df['
+        df['description'] = df['phenomenonName'] + ' - ' + df['offeringName'] + ' - ' + df['unitName']
         if extent is not None:
             gdf = gpd.GeoDataFrame(df, geometry=gpd.points_from_xy(df.longitudeEast, df.latitudeNorth), crs='EPSG:4326')
             gdf = gpd.overlay(gdf, extent, how='intersection')
@@ -99,7 +99,7 @@ class SAEONObsAPI:
         
         # Filter the datasets DataFrame based on your criteria
         filtered_datasets_df = datasets_df[datasets_df['siteName'] == 'Constantiaberg']
-        filtered_datasets_df = filtered_datasets_df[filtered_datasets_df['description'] == 'Air Temperature - Daily Minimum - Degrees
+        filtered_datasets_df = filtered_datasets_df[filtered_datasets_df['description'] == 'Air Temperature - Daily Minimum - Degrees Celsius']
         
         #download data
         obs_data = saeon_api.get_datasets(filtered_datasets_df, start_date='2020-01-01', end_date='2020-12-31')
@@ -118,16 +118,16 @@ class SAEONObsAPI:
         for dataset_id in df['id']:
             url_obs = f"{self.BASE_URL}/{dataset_id}/Observations"
             payload = {}
-                    if start_date and end_date:
-            payload = {'startDate': start_date, 'endDate': end_date}
+            if start_date and end_date:
+                payload = {'startDate': start_date, 'endDate': end_date}
 
-        response = requests.post(url_obs, headers=self.HEADERS, json=payload)
-        response.raise_for_status()
+            response = requests.post(url_obs, headers=self.HEADERS, json=payload)
+            response.raise_for_status()
 
-        data = response.json()
-        temp_df = pd.DataFrame(data)
-        datasets.append(temp_df)
+            data = response.json()
+            temp_df = pd.DataFrame(data)
+            datasets.append(temp_df)
 
-    result = pd.concat(datasets, ignore_index=True)
-    return result
+        result = pd.concat(datasets, ignore_index=True)
+        return result
 
