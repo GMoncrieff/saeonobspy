@@ -1,12 +1,6 @@
 name: Build distribution
 
-on:
-    push:
-      branches:
-        - main
-    pull_request:
-      branches:
-        - main
+on: [push, pull_request]
 
 jobs:
   publish:
@@ -34,9 +28,3 @@ jobs:
         run: |
           echo "$GITHUB_CONTEXT"
 
-      - name: Publish package to PyPI
-        if: ${{ (github.repository == 'GMoncrieff/saeonobspy') && (github.event_name == 'push') && (startsWith(github.event.ref, 'refs/tags')) }}
-        uses: pypa/gh-action-pypi-publish@v1.8.3
-        with:
-          user: __token__
-          password: ${{ secrets.pypi_password }}
