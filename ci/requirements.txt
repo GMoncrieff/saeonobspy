@@ -5,3 +5,5 @@ shapely
 pandas
 requests
 coverage
+setuptools
+versioneer
