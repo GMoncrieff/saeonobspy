@@ -24,12 +24,3 @@ setup(
     ],
     python_requires='>=3.7',
 )
-
-pytest
-pytest-mock
-geopandas
-shapely
-pandas
-requests
-coverage
-setuptools
