@@ -1,0 +1,7 @@
+pytest
+pytest-mock
+geopandas
+shapely
+pandas
+requests
+coverage
