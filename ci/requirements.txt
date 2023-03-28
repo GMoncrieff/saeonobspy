@@ -1,0 +1,5 @@
+pytest
+geopandas
+shapely
+pandas
+requests
