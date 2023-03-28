@@ -3,3 +3,4 @@ geopandas
 shapely
 pandas
 requests
+coverage
