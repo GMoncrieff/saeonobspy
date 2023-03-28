@@ -22,9 +22,9 @@ jobs:
         shell: bash -l {0}
         run: python setup.py sdist bdist_wheel
 
-      - name: Dump GitHub context
-        env:
-          GITHUB_CONTEXT: ${{ toJson(github) }}
-        run: |
-          echo "$GITHUB_CONTEXT"
-
+      - name: Publish package to PyPI
+        if: ${{ (github.repository == 'GMoncrieff/saeonobspy') && (github.event_name == 'push') && (startsWith(github.ref, 'refs/tags')) }}
+        uses: pypa/gh-action-pypi-publish@v1.8.3
+        with:
+          user: __token__
+          password: ${{ secrets.pypi_password }}
