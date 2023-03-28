@@ -1,6 +1,6 @@
  # saeonobspy
 
-[![build](https://github.com/GMoncrieff/saeonobspy/actions/workflows/main.yml/badge.svg)](https://github.com/GMoncrieff/saeonobspy/actions/workflows/main.yml ![codecov](https://codecov.io/gh/GMoncrieff/saeonobspy/branch/main/graph/badge.svg?token=XY9X1S56DE)](https://codecov.io/gh/GMoncrieff/saeonobspy)
+[![build](https://github.com/GMoncrieff/saeonobspy/actions/workflows/main.yml/badge.svg)](https://github.com/GMoncrieff/saeonobspy/actions/workflows/main.yml) [![codecov](https://codecov.io/gh/GMoncrieff/saeonobspy/branch/main/graph/badge.svg?token=XY9X1S56DE)](https://codecov.io/gh/GMoncrieff/saeonobspy)
 
 saeonobspy is a Python package for interacting with the [South African Environmental Observation Network](www.saeon.ac.za) (SAEON) [observations database](http://observations.saeon.ac.za/) API. It provides a simple interface to view available datasets and download observation data.
 
