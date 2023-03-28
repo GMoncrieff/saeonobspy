@@ -1,0 +1,6 @@
+[run]
+omit = setup.py
+       versioneer.py
+       tests/*
+       */__init__.py
+       saeonobspy/_version.py
