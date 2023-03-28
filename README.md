@@ -1,15 +1,28 @@
-# SAEON ObsPy
+# saeonobsby
 
-SAEON ObsPy is a Python package for interacting with the South African Environmental Observation Network (SAEON) Observation Database API. It provides a simple interface to view available datasets and download observation data.
+saeonobspy is a Python package for interacting with the [South African Environmental Observation Network](www.saeon.ac.za) (SAEON) [observations database](http://observations.saeon.ac.za/) API. It provides a simple interface to view available datasets and download observation data.
 
 ## Installation
 
-Install SAEON ObsPy using pip:
+Install saeonobspy using pip:
 
 ```bash
 pip install saeonobspy
 ```
+## Authorisation
 
+To use saeonobsr you need to first register an account [SAEON
+observations database](http://observations.saeon.ac.za/). Once
+registered you need to login and retrieve an API token from
+<https://observations.saeon.ac.za/account/token>. This token will be
+valid for 1 month.
+
+Before starting set your API access token using
+
+``` python
+import os
+os.environ["OBSDB_KEY"] = "xxx"
+```
 ## Usage
 
 Below is an example of using the package to view available datasets and download a set of observations:

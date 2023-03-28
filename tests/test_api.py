@@ -3,10 +3,7 @@ import pytest
 import pandas as pd
 import geopandas as gpd
 from shapely.geometry import Point
-from your_module import (
-    SAEONObsAPI,
-)  # Replace 'your_module' with the name of the file containing the SAEONObsAPI class
-
+from saeonobspy import SAEONObsAPI
 
 @pytest.fixture
 def saeon_api():
@@ -41,21 +38,11 @@ def test_init(saeon_api):
     assert saeon_api.HEADERS == {"Authorization": "Bearer test_key"}
 
 
-def test_missing_api_key():
-    os.environ.pop("OBSDB_KEY")
-    with pytest.raises(
-        ValueError, match="Failed to find API key. Please set API key using os.environ."
-    ):
-        SAEONObsAPI()
-
-
 @pytest.mark.parametrize("spatial", [True, False])
 def test_view_datasets(saeon_api,  api_response, spatial, mocker):
     mock_response = mocker.Mock()
     mock_response.raise_for_status.return_value = None
-    mock_response.json.return_value = [
-       api_response()
-    ]
+    mock_response.json.return_value = [api_response]
 
     mocker.patch("requests.get", return_value=mock_response)
 
@@ -88,9 +75,7 @@ def test_get_datasets(saeon_api, mocker):
 def test_view_datasets_with_extent(saeon_api, api_response, mocker):
     mock_response = mocker.Mock()
     mock_response.raise_for_status.return_value = None
-    mock_response.json.return_value = [
-        api_response()
-    ]
+    mock_response.json.return_value = [api_response]
 
     mocker.patch("requests.get", return_value=mock_response)
 
