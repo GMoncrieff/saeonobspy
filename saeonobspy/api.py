@@ -1,9 +1,11 @@
 import os
-import requests
 import pandas as pd
 import geopandas as gpd
 from shapely.geometry import Point
 from typing import Union
+
+import asyncio
+import aiohttp
 
 
 class SAEONObsAPI:
@@ -55,9 +57,7 @@ class SAEONObsAPI:
         extent_gdf = geopandas.read_file('path/to/extent/shapefile.shp')
         spatial_datasets_gdf = saeon_api.view_datasets(extent=extent_gdf, spatial=True)
         """
-        response = requests.get(self.BASE_URL, headers=self.HEADERS)
-        response.raise_for_status()
-        data = response.json()
+        data = asyncio.run(self._view_datasets(extent, spatial))
         df = pd.DataFrame(data)
 
         # Extract relevant columns and clean up the DataFrame
@@ -139,7 +139,26 @@ class SAEONObsAPI:
         #download data
         obs_data = saeon_api.get_datasets(filtered_datasets_df, start_date='2020-01-01', end_date='2020-12-31')
         """
+        datasets = asyncio.run(self._get_datasets(df, start_date, end_date))
+        result = pd.concat([pd.DataFrame(data) for data in datasets], ignore_index=True)
+        return result
 
+    async def _view_datasets(
+        self, extent: gpd.GeoDataFrame = None, spatial: bool = False
+    ) -> pd.DataFrame:
+        async with aiohttp.ClientSession(headers=self.HEADERS) as session:
+            async with session.get(self.BASE_URL) as response:
+                response.raise_for_status()
+                data = await response.json()
+
+        return data
+
+    async def _get_datasets(
+        self,
+        df: Union[pd.DataFrame, gpd.GeoDataFrame],
+        start_date: str = None,
+        end_date: str = None,
+    ) -> pd.DataFrame:
         if (
             not (isinstance(df, pd.DataFrame) or isinstance(df, gpd.GeoDataFrame))
             or "id" not in df.columns
@@ -151,20 +170,26 @@ class SAEONObsAPI:
         if end_date:
             end_date = pd.to_datetime(end_date).strftime("%Y-%m-%dT%H:%M:%S")
 
-        datasets = []
-
-        for dataset_id in df["id"]:
+        async def fetch_dataset(session, dataset_id, start_date, end_date):
             url_obs = f"{self.BASE_URL}/{dataset_id}/Observations"
             payload = {}
             if start_date and end_date:
                 payload = {"startDate": start_date, "endDate": end_date}
 
-            response = requests.post(url_obs, headers=self.HEADERS, json=payload)
-            response.raise_for_status()
+            async with session.post(url_obs, json=payload) as response:
+                response.raise_for_status()
+                data = await response.json()
+                return data
 
-            data = response.json()
-            temp_df = pd.DataFrame(data)
-            datasets.append(temp_df)
+        async def fetch_all_datasets():
+            async with aiohttp.ClientSession(headers=self.HEADERS) as session:
+                tasks = []
+                for dataset_id in df["id"]:
+                    task = asyncio.create_task(
+                        fetch_dataset(session, dataset_id, start_date, end_date)
+                    )
+                    tasks.append(task)
+                return await asyncio.gather(*tasks)
 
-        result = pd.concat(datasets, ignore_index=True)
-        return result
+        datasets = await fetch_all_datasets()
+        return datasets
