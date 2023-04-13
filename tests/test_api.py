@@ -4,8 +4,7 @@ import geopandas as gpd
 from shapely.geometry import Point
 import pytest
 from saeonobspy import SAEONObsAPI
-from asynctest import CoroutineMock, MagicMock, patch
-import aiohttp
+from asynctest import CoroutineMock, patch
 
 
 # Fixtures
