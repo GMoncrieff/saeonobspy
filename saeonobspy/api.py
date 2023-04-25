@@ -6,6 +6,7 @@ from typing import Union
 
 import asyncio
 import aiohttp
+import nest_asyncio 
 
 
 class SAEONObsAPI:
@@ -17,7 +18,9 @@ class SAEONObsAPI:
         -------
         saeon_api = SAEONObsAPI()
         """
-
+            
+        nest_asyncio.apply()
+        
         self.BASE_URL = "https://observationsapi.saeon.ac.za/Api/Datasets"
         self.API_KEY = os.getenv("OBSDB_KEY")
 
