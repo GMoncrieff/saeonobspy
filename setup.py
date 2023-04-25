@@ -7,7 +7,7 @@ setup(
     version=versioneer.get_version(),
     cmdclass=versioneer.get_cmdclass(),
     packages=find_packages(),
-    install_requires=["pandas", "geopandas", "requests", "shapely", "aiohttp"],
+    install_requires=["pandas", "geopandas", "requests", "shapely", "aiohttp", "nest_asyncio"],
     url="https://github.com/GMoncrieff/saeonobspy",
     author="Glenn Moncrieff",
     author_email="glenn@saeon.ac.za",
