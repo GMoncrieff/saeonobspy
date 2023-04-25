@@ -9,3 +9,4 @@ setuptools
 versioneer
 aiohttp
 asynctest
+nest_asyncio
